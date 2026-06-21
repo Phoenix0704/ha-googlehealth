@@ -11,11 +11,9 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
-
 SCAN_INTERVAL = timedelta(minutes=15)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities):
-    """Setzt die Google Health Sensoren basierend auf dem UI Config Entry auf."""
     db_path = entry.data[CONF_FILE_PATH]
 
     async def async_update_data():
@@ -27,12 +25,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     coordinator = DataUpdateCoordinator(
         hass,
         _LOGGER,
-        name=f"googlehealth_metrics_{entry.entry_id}",
+        name=f"googlehealth_{entry.entry_id}",
         update_method=async_update_data,
         update_interval=SCAN_INTERVAL,
     )
 
-    # Ersten Abruf direkt beim Start erzwingen
     await coordinator.async_config_entry_first_refresh()
 
     sensor_types = [
@@ -45,12 +42,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
         GoogleHealthSensor(coordinator, col, name, unit, icon, entry.entry_id)
         for col, name, unit, icon in sensor_types
     ]
-
     async_add_entities(entities, True)
 
 
 def get_db_metrics(db_path):
-    """Liest die aktuellsten Metriken aus der SQLite-Datenbank."""
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
@@ -63,15 +58,12 @@ def get_db_metrics(db_path):
 
 
 class GoogleHealthSensor(SensorEntity):
-    """Repräsentation eines Google Health Sensors."""
-
     def __init__(self, coordinator, column, name, unit, icon, entry_id):
         self.coordinator = coordinator
         self._column = column
         self._attr_name = name
         self._attr_native_unit_of_measurement = unit
         self._attr_icon = icon
-        # Vergabe einer unique_id erlaubt die Verwaltung via UI
         self._attr_unique_id = f"{entry_id}_{column}"
 
     @property
@@ -89,11 +81,9 @@ class GoogleHealthSensor(SensorEntity):
         return None
 
     async def async_added_to_hass(self):
-        """Sensor beim DataUpdateCoordinator registrieren."""
         self.async_on_remove(
             self.coordinator.async_add_listener(self.async_write_ha_state)
         )
 
     async def async_update(self):
-        """Aktualisiert den Sensor über den Coordinator."""
         await self.coordinator.async_request_refresh()
