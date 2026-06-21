@@ -1,8 +1,8 @@
 {
-  "domain": "airmg",
-  "name": "AirMG Health Metrics",
+  "domain": "googlehealth",
+  "name": "Google Health Metrics",
   "codeowners": [],
-  "documentation": "https://github.com/techniboy/AirMG",
+  "documentation": "https://github.com/Phoenix0704/ha-googlehealth",
   "iot_class": "local_polling",
   "requirements": [],
   "version": "1.0.0"

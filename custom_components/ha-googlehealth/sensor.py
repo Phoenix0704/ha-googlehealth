@@ -42,13 +42,13 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     # Sensoren definieren (Spaltenname, Anzeigename, Einheit, Icon)
     sensor_types = [
-        ("recovery", "AirMG Recovery", "%", "mdi:battery-heart"),
-        ("strain", "AirMG Strain", "", "mdi:fire"),
-        ("sleep", "AirMG Sleep Score", "%", "mdi:sleep"),
+        ("recovery", "GoogleHealth Recovery", "%", "mdi:battery-heart"),
+        ("strain", "GoogleHealth Strain", "", "mdi:fire"),
+        ("sleep", "GoogleHealth Sleep Score", "%", "mdi:sleep"),
     ]
 
     entities = [
-        AirMGSensor(coordinator, col, name, unit, icon)
+        GoogleHealthSensor(coordinator, col, name, unit, icon)
         for col, name, unit, icon in sensor_types
     ]
 
@@ -68,8 +68,8 @@ def get_db_metrics(db_path):
         conn.close()
 
 
-class AirMGSensor(SensorEntity):
-    """Repräsentation eines AirMG Sensors."""
+class GoogleHealthSensor(SensorEntity):
+    """Repräsentation eines GoogleHealth Sensors."""
 
     def __init__(self, coordinator, column, name, unit, icon):
         self.coordinator = coordinator
