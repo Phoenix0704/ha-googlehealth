@@ -1,0 +1,16 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Google Health Metrics",
+        "description": "Bitte gib den absoluten Pfad zu deiner SQLite-Datenbankdatei (.db) an.",
+        "data": {
+          "file_path": "Datenbank-Pfad"
+        }
+      }
+    },
+    "error": {
+      "file_not_found": "Die angegebene Datei wurde nicht gefunden. Bitte überprüfe den absoluten Pfad."
+    }
+  }
+}
